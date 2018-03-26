@@ -3,18 +3,40 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Join | ChatApp</title>
+  <title>Waiting</title>
 
   <!-- Do  -->
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
   <link rel="stylesheet" href="/css/styles.css">
 </head>
 
-<body class="centered-form" id="main-view">
-  <button id="move-queue-button">Send Moves</button>
+<body class="centered-form">
+  <div id="transmitted-move-div">
+  </div>
+  <button id="move-queue-button" disabled>Send Moves</button>
+  <br />
+  <div id="game-board">
+
+  </div>
+  <input id="queue-input-field" hidden></input>
+
+  <script id="game-board-template" type="text/template">
+    <table>
+        {{#map}}
+        <tr>
+            {{#.}}
+            <td>{{displayVal}}</td>
+            {{/.}}
+        </tr>
+        {{/map}}
+    </table>
+  </script>
 
   <script src="/socket.io/socket.io.js"></script>
   <script src="/js/libs/jquery-3.2.1.min.js"></script>
+  <script src="/js/libs/moment.js"></script>
+  <script src="/js/libs/mustache.js"></script>
+  <script src="/js/libs/deparam.js"></script>
   <script src="/js/game.js"></script>
 </body>
 </html>

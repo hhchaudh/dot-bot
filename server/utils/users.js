@@ -3,14 +3,21 @@ class Users {
     this.users = [];
   }
 
-  addUser (id, name, room) {
+  addUser (id, name, room, emitter) {
     let user = {
       id,
       name,
-      room
+      room,
+      emitter,
+      gameMap : [],
+      powerups : []
     };
     this.users.push(user);
     return user;
+  }
+
+  getLastUser () {
+    return this.users[this.users.length-1];
   }
 
   removeUser (id) {
@@ -21,7 +28,11 @@ class Users {
   }
 
   getUser (id) {
-    return this.users.filter(user => user.id === id)[0];
+    return this.users.find(user => user.id === id);
+  }
+
+  getUserRoom(id) {
+      return getUser(id).room;
   }
 
   getUserList (room) {
@@ -32,6 +43,18 @@ class Users {
     return users.map((user) => {
       return user.name;
     });
+  }
+
+  getAllUsers () {
+      return this.users;
+  }
+
+  getNumUsers () {
+      return this.users.length;
+  }
+
+  getGameMap () {
+    return this.users.gameMap;
   }
 }
 
