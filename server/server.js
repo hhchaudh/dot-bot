@@ -8,7 +8,7 @@ const events = require('events');
 
 const {isRealString} = require('./utils/validation');
 const {Users} = require('./utils/users');
-const {getNewMap, makeMove, isGameWon, isValidMove} = require('./utils/GameUtils');
+const {getNewMap, makeMove, isGameWon, isValidMove} = require('./utils/game-utils');
 
 const publicPath = path.join(__dirname, '../frontend');
 const MAX_GAME_PLAYER_COUNT = 4;
