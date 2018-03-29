@@ -53,10 +53,7 @@ socket.on('gameStart', function (gameData) {
 
     moveQueueButton.removeAttr('disabled');
     queueInputField.removeAttr('hidden');
-    let template = $('#game-board-template').html();
-    let html = Mustache.render(template, currentGameData);
-    $("#game-board").html(html);
-
+    renderGameBoard();
     console.log('The game is starting');
 });
 
@@ -83,8 +80,8 @@ moveQueueButton.on('click', function () {
 });
 
 socket.on('playerMoved', function (moveData) {
-    console.log(moveData.position);
     console.log(moveData.name);
+    console.log(moveData.position);
     var currentTile = currentGameData.map[moveData.position[0]][moveData.position[1]];
     currentTile.currentPlayers.push(moveData.name);
     if(currentTile.currentPlayers.length > 1) {
@@ -112,7 +109,6 @@ socket.on('playerMoved', function (moveData) {
             break;
         }
     }
-
     let template = $('#game-board-template').html();
     let html = Mustache.render(template, currentGameData);
     $("#game-board").html(html);
@@ -140,6 +136,7 @@ socket.on('playerReset', function (playerName) {
             break;
         }
     }
+    renderGameBoard();
     console.log(display);
 });
 
@@ -166,3 +163,9 @@ queueInputField.keyup(function (event) {
         moveQueue.push(queueHash[event.which]);
     }
 });
+
+function renderGameBoard() {
+    let template = $('#game-board-template').html();
+    let html = Mustache.render(template, currentGameData);
+    $("#game-board").html(html);
+}

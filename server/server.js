@@ -10,13 +10,13 @@ const {isRealString} = require('./utils/validation');
 const {Users} = require('./utils/users');
 const {getNewMap, makeMove, isGameWon, isValidMove} = require('./utils/GameUtils');
 
-const publicPath = path.join(__dirname, '../public');
+const publicPath = path.join(__dirname, '../frontend');
+const MAX_GAME_PLAYER_COUNT = 4;
 
 let app = express();
 let server = http.createServer(app);
 let io = socketIO(server);
 let users = new Users();
-let games = [];
 let playerQueue = [];
 let gameMap = getNewMap();
 let gameID = 0;
@@ -29,31 +29,16 @@ app.use(express.static(publicPath));
 io.on('connection', (socket) => {
     console.log('New user connected');
 
-    socket.on('join', (params, callback) => {
-        if (!isRealString(params.name)) {
+    socket.on('join', (name, callback) => {
+        if (!isRealString(name)) {
             return callback('Name is invalid');
         }
 
         users.removeUser(socket.id);
-        users.addUser(socket.id, params.name, gameID, queueEmitter);
+        users.addUser(socket.id, name, gameID, queueEmitter);
         playerQueue.push(users.getLastUser());
         socket.join(gameID.toString());
 
-        if (playerQueue.length === 4) {
-            let gameData = {
-                gameMap : gameMap,
-                playerNames : []
-            };
-            playerQueue.forEach((player) => {
-                player.gameMap = gameMap;
-                gameData.playerNames.push(player.name);
-            });
-            io.to(gameID.toString()).emit('gameStart', gameData);
-            playerQueue = [];
-            queueEmitter = new events.EventEmitter();
-            gameMap = getNewMap();
-            gameID++;
-        }
         callback();
     });
 
@@ -112,6 +97,24 @@ io.on('connection', (socket) => {
         });
 
         callback();
+    });
+
+    socket.on('readyAndWaiting', (callback) => {
+        if (playerQueue.length === MAX_GAME_PLAYER_COUNT) {
+            callback("game starting");
+            let gameData = {
+                gameMap : gameMap,
+                playerNames : []
+            };
+            gameData.playerNames = playerQueue.map(player => player.name);
+            io.to(gameID.toString()).emit('gameStart', gameData);
+            playerQueue = [];
+            queueEmitter = new events.EventEmitter();
+            gameMap = getNewMap();
+            gameID++;
+        } else {
+            callback("still waiting");
+        }
     });
 
     socket.on('disconnect', () => {
