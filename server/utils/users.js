@@ -1,61 +1,28 @@
 class Users {
-  constructor () {
-    this.users = [];
-  }
+    constructor() {
+        this.users = {};
+    }
 
-  addUser (id, name, room, emitter) {
-    let user = {
-      id,
-      name,
-      room,
-      emitter,
-      gameMap : [],
-      powerups : []
-    };
-    this.users.push(user);
-    return user;
-  }
+    addUser(id, name, room, emitter) {
+        this.users[id] = {
+            id,
+            name,
+            room,
+            emitter,
+            gameMap: [],
+            powerups: []
+        };
+        return this.users[id];
+    }
 
-  getLastUser () {
-    return this.users[this.users.length-1];
-  }
+    removeUser(id) {
+        delete this.users[id];
+    }
 
-  removeUser (id) {
-    let removedUser = this.getUser(id);
-    this.users = this.users.filter(user => user.id !== id);
+    getUser(id) {
+        return this.users[id];
+    }
 
-    return removedUser;
-  }
-
-  getUser (id) {
-    return this.users.find(user => user.id === id);
-  }
-
-  getUserRoom(id) {
-      return getUser(id).room;
-  }
-
-  getUserList (room) {
-    let users = this.users.filter((user) => {
-      return user.room === room;
-    });
-
-    return users.map((user) => {
-      return user.name;
-    });
-  }
-
-  getAllUsers () {
-      return this.users;
-  }
-
-  getNumUsers () {
-      return this.users.length;
-  }
-
-  getGameMap () {
-    return this.users.gameMap;
-  }
 }
 
 module.exports = {Users};

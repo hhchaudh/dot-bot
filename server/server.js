@@ -36,7 +36,7 @@ io.on('connection', (socket) => {
 
         users.removeUser(socket.id);
         users.addUser(socket.id, name, gameID, queueEmitter);
-        playerQueue.push(users.getLastUser());
+        playerQueue.push(users.getUser(socket.id));
         socket.join(gameID.toString());
 
         callback();
