@@ -7,6 +7,7 @@ Game.Lobby.prototype = {
         this.add.sprite(0, 0, 'screen-lobby');
         Game.socket.on('gameStart', function (gameData) {
             console.log(gameData);
+            console.log(gameData.playerNames);
             currentScope.startGame();
         });
         Game.socket.emit('readyAndWaiting', function(msg) {

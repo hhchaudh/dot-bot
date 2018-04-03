@@ -25,6 +25,9 @@ socket.on('connect', function () {
             window.location.href = '/';
         } else {
             console.log('No error');
+            socket.emit('readyAndWaiting', function(msg) {
+                console.log(msg);
+            });
         }
     });
 });
@@ -46,15 +49,48 @@ socket.on('gameStart', function (gameData) {
     startingPoint = currentGameData.map[currentGameData.startPoint[0]][currentGameData.startPoint[1]];
     startingPoint.baseDisplayVal = "S";
     startingPoint.displayVal = "*";
+    players = [];
     for(var i = 0; i < gameData.playerNames.length; i++) {
         players.push({name: gameData.playerNames[i], position: startingPoint});
-        startingPoint.currentPlayers.push(gameData.playerNames);
+        startingPoint.currentPlayers.push(gameData.playerNames[i]);
     }
 
     moveQueueButton.removeAttr('disabled');
     queueInputField.removeAttr('hidden');
     renderGameBoard();
     console.log('The game is starting');
+});
+
+socket.on('newGame', function(gameMap) {
+    currentGameData = gameMap;
+    originalGameMap = gameMap.map;
+    for(var i = 0; i < currentGameData.map.length; i++) {
+        for(var j = 0; j < currentGameData.map[0].length; j++) {
+            currentGameData.map[i][j] = {
+                baseDisplayVal : originalGameMap[i][j],
+                currentPlayers : [],
+                displayVal : originalGameMap[i][j]
+            }
+        }
+    }
+
+    for(var i = 0; i < players.length; i++) {
+        startingPoint = currentGameData.map[currentGameData.startPoint[0]][currentGameData.startPoint[1]];
+        startingPoint.baseDisplayVal = "S";
+        startingPoint.displayVal = "*";
+        startingPoint.currentPlayers.push(players[i].name);
+    }
+
+    moveQueueButton.removeAttr('disabled');
+    queueInputField.removeAttr('hidden');
+    renderGameBoard();
+    console.log('The game is starting');
+});
+
+socket.on('backToWaiting', function () {
+    socket.emit('readyAndWaiting', function(msg) {
+        console.log(msg);
+    });
 });
 
 socket.on('disconnect', function () {

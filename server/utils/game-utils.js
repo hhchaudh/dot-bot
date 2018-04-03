@@ -42,6 +42,24 @@ let getNewMap = () => {
     };
 };
 
+let getSecondMap = () => {
+    return {
+        "map": [
+            [0,2,1,1,0,0,0,0,0,0],
+            [0,0,1,1,0,1,1,0,0,0],
+            [1,0,1,1,0,1,1,99,0,0],
+            [0,0,1,1,0,1,1,0,0,0],
+            [1,0,0,1,0,1,1,0,0,0],
+            [1,0,0,0,0,1,1,100,0,0],
+            [1,0,0,0,0,1,1,0,0,0],
+            [1,0,1,1,0,1,1,0,0,0],
+            [1,0,0,0,0,1,1,0,0,0],
+            [1,0,0,0,0,1,1,0,0,0]
+        ],
+        "startPoint" : [5, 7],
+    };
+};
+
 let makeMove = (currentPosition, nextMove) => {
     if(nextMove % 2 === 0) {
         currentPosition[1] += moveGuide[nextMove];
@@ -89,4 +107,4 @@ let isGameWon = (currentPosition, gameMap) => {
     return (mapLegend[mapPositionValue].name === "end");
 };
 
-module.exports = {getNewMap, makeMove, isGameWon, isValidMove};
+module.exports = {getNewMap, makeMove, isGameWon, isValidMove, getSecondMap};

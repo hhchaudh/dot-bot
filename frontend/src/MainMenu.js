@@ -23,7 +23,8 @@ Game.MainMenu.prototype = {
 	startGame: function() {
 		console.log("Nickname entered: " + this.loginBox.value);
 		var playerName = this.loginBox.value;
-		Game.socket.emit('join', playerName, function(err) {
+		var data = {name: playerName};
+		Game.socket.emit('join', data, function(err) {
 		    if(err) {
 		        console.log(err);
             } else {
