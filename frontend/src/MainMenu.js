@@ -29,8 +29,8 @@ Game.MainMenu.prototype = {
 		        console.log(err);
             } else {
 		        console.log("No error");
+                this.game.state.start('Lobby');
             }
         });
-		this.game.state.start('Lobby');
 	}
 };
