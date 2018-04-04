@@ -8,6 +8,7 @@ Game.Lobby.prototype = {
         Game.socket.on('gameStart', function (gameData) {
             console.log(gameData);
             console.log(gameData.playerNames);
+            Game.gameData = gameData;
             currentScope.startGame();
         });
         Game.socket.emit('readyAndWaiting', function(msg) {
