@@ -24,12 +24,13 @@ Game.MainMenu.prototype = {
 		console.log("Nickname entered: " + this.loginBox.value);
 		var playerName = this.loginBox.value;
 		var data = {name: playerName};
+		var currentScope = this;
 		Game.socket.emit('join', data, function(err) {
 		    if(err) {
 		        console.log(err);
             } else {
 		        console.log("No error");
-                this.game.state.start('Lobby');
+                currentScope.game.state.start('Lobby');
             }
         });
 	}

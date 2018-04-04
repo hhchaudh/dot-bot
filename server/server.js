@@ -19,6 +19,7 @@ let io = socketIO(server);
 let users = new Users();
 let rooms = {};
 let playerQueue = [];
+let readyQueue = [];
 let gameID = 0;
 let queueEmitter = new events.EventEmitter();
 
@@ -38,6 +39,7 @@ io.on('connection', (socket) => {
 
     socket.on('join', (playerData, callback) => {
         let name = playerData.name;
+        console.log(name);
 
         if (!isRealString(name)) {
             return callback('Name is invalid');
@@ -124,20 +126,33 @@ io.on('connection', (socket) => {
     });
 
     socket.on('readyAndWaiting', (callback) => {
-        if (playerQueue.length >= MAX_GAME_PLAYER_COUNT) {
+        let queueRemovalIndex = playerQueue.findIndex((player) => player.id === socket.id);
+        if (queueRemovalIndex > -1) {
+            let player = playerQueue.splice(queueRemovalIndex, 1);
+            readyQueue.push(player[0]);
+        } else {
+            let errorMsg = "Error, could not find player in player queue";
+            console.log(errorMsg);
+            callback(errorMsg);
+            return;
+        }
+
+
+        if (readyQueue.length >= MAX_GAME_PLAYER_COUNT) {
             callback("game starting");
             let gameMap = getNewMap();
             let gameData = {
                 gameMap : gameMap,
                 playerNames : []
             };
-            let firstFourPlayers = playerQueue.splice(0,4);
-            gameData.playerNames = firstFourPlayers.map(player => player.name);
-            firstFourPlayers.forEach((player) => {
+            gameData.playerNames = readyQueue.map((player) => {
+                return player.name;
+            });
+            readyQueue.forEach((player) => {
                 player.gameMap = gameMap;
                 player.emitter = queueEmitter;
             });
-            rooms[gameID] = {players : firstFourPlayers};
+            rooms[gameID] = {players : readyQueue};
             io.to(gameID.toString()).emit('gameStart', gameData);
             queueEmitter = new events.EventEmitter();
             gameID++;
