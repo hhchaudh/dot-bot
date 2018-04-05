@@ -103,7 +103,6 @@ io.on('connection', (socket) => {
                 currentIndex++;
                 if (currentIndex === mQueue.length) {
                     io.to(player.room).emit('playerReset', player.name);
-                    socket.emit('fail');
                     myEmitter.emit('stop');
                 }
             };
@@ -155,6 +154,7 @@ io.on('connection', (socket) => {
             rooms[gameID] = {players : readyQueue};
             io.to(gameID.toString()).emit('gameStart', gameData);
             queueEmitter = new events.EventEmitter();
+            readyQueue = [];
             gameID++;
         } else {
             callback("still waiting");
