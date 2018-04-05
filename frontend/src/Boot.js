@@ -2,39 +2,7 @@ var socket = io();
 
 var Game = {
 	_WIDTH: 1080,
-	_HEIGHT: 1920,
-	bar: "",
-	//Variables to hold the player and paths and barriers images
-	barriers: "",
-	paths: "",
-	player: "",
-
-	//Array to hold moves queue
-	moveQueue: [],
-	//Hold queue images
-	queue: "",
-	//Current move popped from the queue
-	currentMove: "",
-
-	//Moves queue coordinates
-	nextQueueX: 0,
-	nextQueueY: 1200,
-
-	//Players coordinates
-	//Also used by the go function to move the player in the game world.
-	a: "",
-	b: "",
-
-	//buttons
-	resetButton: "",
-	undoButon: "",
-	goButton: "",
-	left: "",
-	right: "",
-	up: "",
-	down: "",
-	animationTween: "",
-	trophy: ""
+	_HEIGHT: 1920
 };
 Game.socket = socket;
 Game.gameData = null;
