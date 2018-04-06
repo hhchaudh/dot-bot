@@ -7,41 +7,32 @@ Game.Preloader.prototype = {
 
 		this.game.add.plugin(PhaserInput.Plugin);
 
-		this.load.image('ball', 'img/ball.png');
-		this.load.image('hole', 'img/hole.png');
-		this.load.image('element-w', 'img/element-w.png');
-		this.load.image('element-h', 'img/element-h.png');
-		this.load.image('panel', 'img/panel.png');
-		this.load.image('title', 'img/title.png');
-		this.load.image('button-pause', 'img/button-pause.png');
 		this.load.image('screen-bg', 'img/screen-bg.png');
 		this.load.image('screen-mainmenu', 'img/screen-mainmenu.png');
 		this.load.image('screen-lobby', 'img/screen-lobby.png');
-		this.load.image('border-horizontal', 'img/border-horizontal.png');
-		this.load.image('border-vertical', 'img/border-vertical.png');
-		this.load.image('star', 'img/star.png');
-		this.load.image('prize', 'img/prize.png');
-		this.load.image('bar', 'img/button_bar.png');
-		this.load.image('sky', 'img/sky.png');
+		this.load.image('move-queue-bg', 'img/move-queue-bg.png');
+		this.load.image('player-yellow', 'img/player-yellow.png');
 		this.load.image('path', 'img/path.png');
 		this.load.image('barrier', 'img/barrier.png');
+		this.load.image('start', 'img/start.png');
+		this.load.image('goal', 'img/goal.png');
 		this.load.image('powerup', 'img/powerup.png');
-		this.load.image('goLeft', 'img/left.png');
-		this.load.image('goRight', 'img/right.png');
-		this.load.image('goUp', 'img/up.png');
-		this.load.image('goDown', 'img/down.png');
-		this.load.image('queueLeft', 'img/minileft.png');
-		this.load.image('queueRight', 'img/miniright.png');
-		this.load.image('queueUp', 'img/miniup.png');
-		this.load.image('queueDown', 'img/minidown.png');
-		this.load.image('resetButton', 'img/reset.png');
-		this.load.image('undoButon', 'img/undo.png');
-		this.load.image('goButton', 'img/gobutton.png');
 
-		this.load.spritesheet('button-audio', 'img/button-audio.png', 35, 35);
+		this.load.image('queue-left', 'img/icon-left.png');
+		this.load.image('queue-right', 'img/icon-right.png');
+		this.load.image('queue-up', 'img/icon-up.png');
+		this.load.image('queue-down', 'img/icon-down.png');
+		this.load.image('queue-more', 'img/icon-more.png');
+
+		this.load.spritesheet('button-left', 'img/button-left.png', 190, 140);
+		this.load.spritesheet('button-up', 'img/button-up.png', 190, 140);
+		this.load.spritesheet('button-down', 'img/button-down.png', 190, 140);
+		this.load.spritesheet('button-right', 'img/button-right.png', 190, 140);
+
 		this.load.spritesheet('button-play', 'img/button-play.png', 330, 132);
-
-		this.load.audio('audio-bounce', ['audio/bounce.ogg', 'audio/bounce.mp3', 'audio/bounce.m4a']);
+		this.load.spritesheet('button-reset', 'img/button-reset.png', 350, 110);
+		this.load.spritesheet('button-undo', 'img/button-undo.png', 350, 110);
+		this.load.spritesheet('button-go', 'img/button-go.png', 350, 110);
 	},
 	create: function() {
 		this.game.state.start('MainMenu');
