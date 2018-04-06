@@ -67,60 +67,29 @@ Game.Game.prototype = {
 		Game.up = this.add.button(589.5, 1812, 'goUp', this.addMove);
 		Game.down = this.add.button(805.5, 1812, 'goDown', this.addMove);
 
+		Game.moveQueue = [];
 		Game.nextQueueX = 0;
 		Game.nextQueueY = 1200;
-		Game.animationTween = this.add.tween(Game.player);
 
-		// Game.socket.on('playerMoved', function(playerMove) {
-		// 	movePlayer(/*playerMove.name, */playerMove.instruction);
-		// });
+		Game.currentScope = this;
+
+		Game.socket.on('playerMoved', function(playerMove) {
+			console.log('Player move received: ' + JSON.stringify(playerMove));
+			Game.movePlayer(playerMove.name, playerMove.position);
+		});
+
+		Game.socket.on('playerReset', function(name) {
+			console.log('Player reset: ' + name);
+			Game.resetPlayer(name);
+		});
+
 
 	},
 
 	sendQueue: function () {
-		// Game.socket.emit('transmitMoveQueue', { moveQueue: Game.moveQueue }, function() {
-        //     console.log('Move queue received');
-        // });
-	},
-
-	movePlayer: function (instruction) {
-		// Left
-		if (instruction == 'left') {
-			Game.a -= 108;
-			Game.animationTween.to({
-				x: Game.a,
-				y: Game.b
-			}, 200, "Linear");
-		}
-		// Up
-		else if (instruction == 'up') {
-			Game.b += 108;
-			Game.animationTween.to({
-				x: Game.a,
-				y: Game.b
-			}, 200, "Linear");
-		}
-		//Right
-		else if (instruction == 'right') {
-			Game.a += 108;
-			Game.animationTween.to({
-				x: Game.a,
-				y: Game.b
-			}, 200, "Linear");
-		}
-		// Down
-		else if (instruction == 'down') {
-			Game.b -= 108;
-			Game.animationTween.to({
-				x: Game.a,
-				y: Game.b
-			}, 200, "Linear");
-		}
-	},
-
-	resetPlayer: function () {
-		Game.player.x = Game.startX;
-		Game.player.y = Game.startY;
+		Game.socket.emit('transmitMoveQueue', Game.moveQueue, function() {
+            console.log('Move queue received');
+        });
 	},
 
 	addMove: function () {
@@ -163,6 +132,28 @@ Game.Game.prototype = {
 		}
 	}
 
+};
+
+Game.movePlayer = function (name, position) {
+	// Current player
+	if (name == Game.playerName) {
+		var xPos = 54 + (108 * position[1]);
+		var yPos = 162 + (108 * position[0]);
+		console.log('Player moved to: ' + xPos + ', ' + yPos);
+		Game.playerTween = Game.currentScope.add.tween(Game.player);
+		Game.playerTween.to({
+			x: xPos,
+			y: yPos
+		}, 400, "Linear", true, 0, 0);
+	}
+};
+
+Game.resetPlayer = function (name) {
+	if(name == Game.playerName) {
+		Game.playerTween.stop(true);
+		Game.player.x = Game.startX;
+		Game.player.y = Game.startY;
+	}
 };
 
 Game.addToQueue = function (instruction) {
