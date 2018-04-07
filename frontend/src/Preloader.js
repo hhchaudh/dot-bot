@@ -12,6 +12,9 @@ Game.Preloader.prototype = {
 		this.load.image('screen-lobby', 'img/screen-lobby.png');
 		this.load.image('move-queue-bg', 'img/move-queue-bg.png');
 		this.load.image('player-yellow', 'img/player-yellow.png');
+		this.load.image('player-green', 'img/player-green.png');
+		this.load.image('player-blue', 'img/player-blue.png');
+		this.load.image('player-pink', 'img/player-pink.png');
 		this.load.image('path', 'img/path.png');
 		this.load.image('barrier', 'img/barrier.png');
 		this.load.image('start', 'img/start.png');

@@ -9,6 +9,8 @@ Game.Game.prototype = {
 
 		// Map setup
 		var grid = Game.gameData.gameMap.map;
+		Game.startX = 0 + (108 * Game.gameData.gameMap.startPoint[1]);
+		Game.startY = 20 + (108 * Game.gameData.gameMap.startPoint[0]);
 
 		for (var row = 0; row < 10; row++) {
 			for (var col = 0; col < 10; col++) {
@@ -30,14 +32,28 @@ Game.Game.prototype = {
 			}
 		}
 
-		Game.startX = 54 + (108 * Game.gameData.gameMap.startPoint[1]);
-		Game.startY = 74 + (108 * Game.gameData.gameMap.startPoint[0]);
+        // Player setup
+        Game.otherPlayers = {};
+        var colors = ['player-green', 'player-blue', 'player-pink'];
+        var colorsHex = ['#69bd45', '#3abfef', '#ed3293'];
+        for (var i = 0; i < Game.gameData.playerNames.length; i++) {
+            var name = Game.gameData.playerNames[i];
+            console.log('Adding player ' + name);
+            if (name != Game.playerName) {
+                Game.otherPlayers[name] = {
+                    "color": colors.shift(),
+                    "colorHex": colorsHex.shift(),
+                };
+            }
+        }
+        Game.playerPink = this.add.sprite(Game.startX, Game.startY, 'player-pink');
+        Game.playerBlue = this.add.sprite(Game.startX, Game.startY, 'player-blue');
+        Game.playerGreen = this.add.sprite(Game.startX, Game.startY, 'player-green');
 
 		Game.player = this.add.sprite(Game.startX, Game.startY, 'player-yellow');
-		Game.player.anchor.setTo(0.5,0.5);
 		this.physics.arcade.enable(Game.player);
 		Game.player.enableBody = true;
-		Game.player.body.moves = true;
+        Game.player.body.moves = true;
 
 		// Queue setup
 		Game.queue = this.add.group();
@@ -55,9 +71,9 @@ Game.Game.prototype = {
 		Game.downButton = this.add.button(540, 1740, 'button-down', function() { this.addMove('down') }, this, 2, 0, 1);
 		Game.rightButton = this.add.button(730, 1740, 'button-right', function() { this.addMove('right') }, this, 2, 0, 1);
 
-		// Reset notification setup
-		Game.resetText = this.add.text(Game._WIDTH*0.5, 1160, '', {font: '40px Arial Black', fill: '#ffffff'});
-		Game.resetText.anchor.set(0.5);
+		// Text notification setup
+		Game.notificationText = this.add.text(Game._WIDTH*0.5, 1160, 'Game start!', {font: '40px Arial Black', fill: '#ffffff'});
+		Game.notificationText.anchor.set(0.5);
 
 		// Save the current 'this' scope for later
 		Game.currentScope = this;
@@ -134,36 +150,86 @@ Game.Game.prototype = {
 };
 
 Game.movePlayer = function (name, position) {
+    // Pixel coordinates
+    var xPos = 0 + (108 * position[1]);
+    var yPos = 20 + (108 * position[0]);
+
 	// Current player
 	if (name == Game.playerName) {
-		var xPos = 54 + (108 * position[1]);
-		var yPos = 74 + (108 * position[0]);
 		// console.log('Player moved to: ' + xPos + ', ' + yPos);
 		Game.playerTween = Game.currentScope.add.tween(Game.player);
 		Game.playerTween.to({
 			x: xPos,
 			y: yPos
 		}, 400, "Linear", true, 0, 0);
-	}
+    }
+    // Other players
+    else {
+        if (Game.otherPlayers[name].color == 'player-green') {
+            Game.playerGreenTween = Game.currentScope.add.tween(Game.playerGreen);
+            Game.playerGreenTween.to({
+                x: xPos,
+                y: yPos
+            }, 400, "Linear", true, 0, 0);
+        }
+        else if (Game.otherPlayers[name].color == 'player-blue') {
+            Game.playerBlueTween = Game.currentScope.add.tween(Game.playerBlue);
+            Game.playerBlueTween.to({
+                x: xPos,
+                y: yPos
+            }, 400, "Linear", true, 0, 0);
+        }
+        else if (Game.otherPlayers[name].color == 'player-pink') {
+            Game.playerPinkTween = Game.currentScope.add.tween(Game.playerPink);
+            Game.playerPinkTween.to({
+                x: xPos,
+                y: yPos
+            }, 400, "Linear", true, 0, 0);
+        }
+    }
 };
 
 Game.resetPlayer = function (name) {
-	Game.resetText.destroy();
+	Game.notificationText.destroy();
 	if(name == Game.playerName) {
 		Game.playerTween.stop(true);
-		Game.player.x = Game.startX;
-		Game.player.y = Game.startY;
+        setTimeout( function() {
+            Game.player.x = Game.startX;
+            Game.player.y = Game.startY;
+        }, 100);
 
-		Game.resetText = Game.currentScope.add.text(Game._WIDTH*0.5, 1160, 'You have been reset!', {font: '40px Arial Black', fill: '#ffffff'});
-		Game.resetText.anchor.set(0.5);
-		Game.resetText.addColor('#fff200', 0);
-		Game.resetText.addColor('#ffffff', 3);
+		Game.notificationText = Game.currentScope.add.text(Game._WIDTH*0.5, 1160, 'You have been reset!', {font: '40px Arial Black', fill: '#ffffff'});
+		Game.notificationText.anchor.set(0.5);
+		Game.notificationText.addColor('#fff200', 0);
+		Game.notificationText.addColor('#ffffff', 3);
 	}
 	else {
-		Game.resetText = Game.currentScope.add.text(Game._WIDTH*0.5, 1160, name + ' has been reset!', {font: '40px Arial Black', fill: '#ffffff'});
-		Game.resetText.anchor.set(0.5);
-		Game.resetText.addColor('#ed3293', 0);
-		Game.resetText.addColor('#ffffff', name.length);
+        if (Game.otherPlayers[name].color == 'player-green') {
+            Game.playerGreenTween.stop(true);
+            setTimeout( function() {
+                Game.playerGreen.x = Game.startX;
+                Game.playerGreen.y = Game.startY;
+            }, 100);
+        }
+        else if (Game.otherPlayers[name].color == 'player-blue') {
+            Game.playerBlueTween.stop(true);
+            setTimeout( function() {
+                Game.playerBlue.x = Game.startX;
+                Game.playerBlue.y = Game.startY;
+            }, 100);
+        }
+        else if (Game.otherPlayers[name].color == 'player-pink') {
+            Game.playerPinkTween.stop(true);
+            setTimeout( function() {
+                Game.playerPink.x = Game.startX;
+                Game.playerPink.y = Game.startY;
+            }, 100);
+        }
+
+		Game.notificationText = Game.currentScope.add.text(Game._WIDTH*0.5, 1160, name + ' has been reset!', {font: '40px Arial Black', fill: '#ffffff'});
+		Game.notificationText.anchor.set(0.5);
+		Game.notificationText.addColor(Game.otherPlayers[name].colorHex, 0);
+		Game.notificationText.addColor('#ffffff', name.length);
 	}
 
 	// Re-enable button inputs.
