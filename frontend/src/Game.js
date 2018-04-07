@@ -74,18 +74,21 @@ Game.Game.prototype = {
 	},
 
 	sendQueue: function () {
-		Game.socket.emit('transmitMoveQueue', Game.moveQueue, function() {
-			console.log('Move queue received');
+		Game.socket.emit('transmitMoveQueue', Game.moveQueue, function(err) {
+			if(err) {
+			    console.log(err);
+            } else {
+                console.log('Move queue received');
+                // Disable button inputs.
+                Game.resetButton.inputEnabled = false;
+                Game.undoButton.inputEnabled = false;
+                Game.goButton.inputEnabled = false;
+                Game.leftButton.inputEnabled = false;
+                Game.upButton.inputEnabled = false;
+                Game.downButton.inputEnabled = false;
+                Game.rightButton.inputEnabled = false;
+            }
         });
-			
-		// Disable button inputs.
-		Game.resetButton.inputEnabled = false;
-		Game.undoButton.inputEnabled = false;
-		Game.goButton.inputEnabled = false;
-		Game.leftButton.inputEnabled = false;
-		Game.upButton.inputEnabled = false;
-		Game.downButton.inputEnabled = false;
-		Game.rightButton.inputEnabled = false;
 	},
 
 	addMove: function (direction) {

@@ -58,6 +58,9 @@ io.on('connection', (socket) => {
     });
 
     socket.on('transmitMoveQueue', (moveQueue, callback) => {
+        if(moveQueue.length < 1) {
+            return callback("The movequeue is empty!");
+        }
         let myEmitter = new events.EventEmitter();
         let player = users.getUser(socket.id);
         let gameMap = player.gameMap;
