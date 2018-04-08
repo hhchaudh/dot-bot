@@ -21,6 +21,8 @@ Game.MainMenu.prototype = {
 		this.errorText.anchor.set(0.5);
 	},
 	startGame: function() {
+	    StatusBar.show();
+	    StatusBar.hide();
 		console.log("Nickname entered: " + this.loginBox.value);
 		var playerName = this.loginBox.value;
 		Game.playerName = playerName;
