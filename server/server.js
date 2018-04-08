@@ -172,6 +172,10 @@ io.on('connection', (socket) => {
             playerQueue.splice(queueRemovalIndex, 1);
         }
     });
+
+    socket.on('noStatusBar', () => {
+        console.log("There is no status bar");
+    })
 });
 
 server.listen(port, () => {
