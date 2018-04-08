@@ -62,14 +62,14 @@ Game.Game.prototype = {
 		Game.nextQueueY = 1250;
 
 		// Controls setup
-		Game.resetButton = this.add.button(15, 1596, 'button-reset', this.resetQueue, this, 2, 0, 1);
-		Game.undoButton = this.add.button(365, 1596, 'button-undo', this.undoQueue, this, 2, 0, 1);
-		Game.goButton = this.add.button(715, 1596, 'button-go', this.sendQueue, this, 2, 0, 1);
+		Game.resetButton = this.add.button(15, 1596, 'button-reset', this.resetQueue, this, 2, 0, 1, 0);
+		Game.undoButton = this.add.button(365, 1596, 'button-undo', this.undoQueue, this, 2, 0, 1, 0);
+		Game.goButton = this.add.button(715, 1596, 'button-go', this.sendQueue, this, 2, 0, 1, 0);
 
-		Game.leftButton = this.add.button(160, 1740, 'button-left', function() { this.addMove('left') }, this, 2, 0, 1);
-		Game.upButton = this.add.button(350, 1740, 'button-up', function() { this.addMove('up') }, this, 2, 0, 1);
-		Game.downButton = this.add.button(540, 1740, 'button-down', function() { this.addMove('down') }, this, 2, 0, 1);
-		Game.rightButton = this.add.button(730, 1740, 'button-right', function() { this.addMove('right') }, this, 2, 0, 1);
+		Game.leftButton = this.add.button(160, 1740, 'button-left', function() { this.addMove('left') }, this, 2, 0, 1, 0);
+		Game.upButton = this.add.button(350, 1740, 'button-up', function() { this.addMove('up') }, this, 2, 0, 1, 0);
+		Game.downButton = this.add.button(540, 1740, 'button-down', function() { this.addMove('down') }, this, 2, 0, 1, 0);
+		Game.rightButton = this.add.button(730, 1740, 'button-right', function() { this.addMove('right') }, this, 2, 0, 1, 0);
 
 		// Text notification setup
 		Game.notificationText = this.add.text(Game._WIDTH*0.5, 1160, 'Game start!', {font: '40px Arial Black', fill: '#ffffff'});
