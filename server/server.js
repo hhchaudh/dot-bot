@@ -87,8 +87,7 @@ io.on('connection', (socket) => {
                         let countDown = setInterval(() => {
                             io.to(player.room).emit('newGameCountDown', seconds);
                             seconds--;
-                            if(seconds <= 0) {
-                                clearInterval(countDown);
+                            if(seconds <= 0) {                                
                                 if(io.sockets.adapter.rooms[player.room].length === MAX_GAME_PLAYER_COUNT) {
                                     startNewGame(player.room);
                                 } else {
@@ -98,6 +97,7 @@ io.on('connection', (socket) => {
                                     io.to(player.room).emit('backToWaiting');
                                     delete rooms[player.room];
                                 }
+                                clearInterval(countDown);
                             }
                         }, 1000);
                         return;
