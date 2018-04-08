@@ -21,12 +21,6 @@ Game.MainMenu.prototype = {
 		this.errorText.anchor.set(0.5);
 	},
 	startGame: function() {
-	    if(window.StatusBar) {
-            window.StatusBar.show();
-	        window.StatusBar.hide();
-        } else {
-	        Game.socket.emit("noStatusBar");
-        }
 		console.log("Nickname entered: " + this.loginBox.value);
 		var playerName = this.loginBox.value;
 		Game.playerName = playerName;
