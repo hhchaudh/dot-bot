@@ -82,15 +82,35 @@ Game.Game.prototype = {
 		// Save the current 'this' scope for later
 		Game.currentScope = this;
 
-		Game.socket.on('playerMoved', function(playerMove) {
+		Game.socket.on('playerMoved', function (playerMove) {
 			// console.log('Player move received: ' + JSON.stringify(playerMove));
 			Game.movePlayer(playerMove.name, playerMove.position);
 		});
 
-		Game.socket.on('playerReset', function(name) {
+		Game.socket.on('playerReset', function (name) {
 			console.log('Player reset: ' + name);
 			Game.resetPlayer(name);
 		});
+
+		Game.socket.on('gameWon', function (name) {
+			console.log(name + ' has won!');
+		});
+
+		Game.socket.on('newGameCountDown', function (seconds) {
+			console.log(seconds);
+		});
+		
+		Game.socket.on('backToWaiting', function () {
+			console.log("Returning to lobby...");
+            Game.currentScope.game.state.start('Lobby');
+        });
+
+		Game.socket.on('gameStart', function (gameData) {
+            console.log(gameData);
+            console.log(gameData.playerNames);
+            Game.gameData = gameData;
+            Game.currentScope.game.state.start('Game');
+        });
 	},
 
 	sendQueue: function () {
@@ -199,7 +219,7 @@ Game.movePlayer = function (name, position) {
             }, 400, "Linear", true, 0, 0);
 		}
 		
-		if (Game.powerupsX.indexOf(position[1]) == Game.powerupsY.indexOf(position[0])) {
+		if ((Game.powerupsX.indexOf(position[1]) == Game.powerupsY.indexOf(position[0])) && (Game.powerupsX.indexOf(position[1]) != -1)) {
 			Game.notificationText.destroy();
 			Game.notificationText = Game.currentScope.add.text(Game._WIDTH*0.5, 1160, name + ' has picked up a powerup!', {font: '40px Arial Black', fill: '#ffffff'});
 			Game.notificationText.anchor.set(0.5);
