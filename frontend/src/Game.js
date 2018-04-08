@@ -91,6 +91,21 @@ Game.Game.prototype = {
 			console.log('Player reset: ' + name);
 			Game.resetPlayer(name);
 		});
+
+		Game.socket.on('backToWaiting', function() {
+			// after the countdown is over, if there is a player missing, then this message will be sent to the remaining players.
+			console.log('Received server call to go back to Lobby state');
+		});
+
+		Game.socket.on('gameWon', function(playerName) {
+			console.log('Player won: ' + playerName);
+		});
+
+		Game.socket.on('newGame', function(data) {
+			// activates when no player has left the current game
+			console.log('Got new game message with map: ');
+			console.log(data);
+		})
 	},
 
 	sendQueue: function () {
