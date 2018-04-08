@@ -193,10 +193,11 @@ Game.resetPlayer = function (name) {
 	Game.notificationText.destroy();
 	if(name == Game.playerName) {
 		Game.playerTween.stop(true);
-        setTimeout( function() {
-            Game.player.x = Game.startX;
-            Game.player.y = Game.startY;
-        }, 100);
+        Game.playerTween = Game.currentScope.add.tween(Game.player);
+		Game.playerTween.to({
+			x: Game.startX,
+			y: Game.startY
+		}, 100, "Linear", true, 0, 0);
 
 		Game.notificationText = Game.currentScope.add.text(Game._WIDTH*0.5, 1160, 'You have been reset!', {font: '40px Arial Black', fill: '#ffffff'});
 		Game.notificationText.anchor.set(0.5);
@@ -206,24 +207,27 @@ Game.resetPlayer = function (name) {
 	else {
         if (Game.otherPlayers[name].color == 'player-green') {
             Game.playerGreenTween.stop(true);
-            setTimeout( function() {
-                Game.playerGreen.x = Game.startX;
-                Game.playerGreen.y = Game.startY;
-            }, 100);
+			Game.playerGreenTween = Game.currentScope.add.tween(Game.playerGreen);
+            Game.playerGreenTween.to({
+                x: Game.startX,
+                y: Game.startY
+            }, 100, "Linear", true, 0, 0);
         }
         else if (Game.otherPlayers[name].color == 'player-blue') {
             Game.playerBlueTween.stop(true);
-            setTimeout( function() {
-                Game.playerBlue.x = Game.startX;
-                Game.playerBlue.y = Game.startY;
-            }, 100);
+            Game.playerBlueTween = Game.currentScope.add.tween(Game.playerBlue);
+            Game.playerBlueTween.to({
+                x: Game.startX,
+                y: Game.startY
+            }, 100, "Linear", true, 0, 0);
         }
         else if (Game.otherPlayers[name].color == 'player-pink') {
             Game.playerPinkTween.stop(true);
-            setTimeout( function() {
-                Game.playerPink.x = Game.startX;
-                Game.playerPink.y = Game.startY;
-            }, 100);
+            Game.playerPinkTween = Game.currentScope.add.tween(Game.playerPink);
+            Game.playerPinkTween.to({
+                x: Game.startX,
+                y: Game.startY
+            }, 100, "Linear", true, 0, 0);
         }
 
 		Game.notificationText = Game.currentScope.add.text(Game._WIDTH*0.5, 1160, name + ' has been reset!', {font: '40px Arial Black', fill: '#ffffff'});
@@ -245,7 +249,6 @@ Game.resetPlayer = function (name) {
 Game.addToQueue = function (instruction) {
 	// If displayed moves is too long, display a '...' and do not display more
 	if (Game.moveQueue.length == 30) {
-		/***** UPDATE THIS *****/
 		Game.queue.create(Game.nextQueueX, Game.nextQueueY, 'queue-more');
 		Game.nextQueueX += 103;
 		return;
