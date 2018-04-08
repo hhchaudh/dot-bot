@@ -14,6 +14,9 @@ Game.MainMenu.prototype = {
 			placeHolder: 'Nickname',
 			type: PhaserInput.InputType.text
 		});
+		PhaserInput.onKeyboardOpen.addOnce(function() {
+		    StatusBar.hide();
+        });
 		this.startButton = this.add.button(Game._WIDTH*0.5, 1400, 'button-play', this.startGame, this, 2, 0, 1);
 		this.startButton.anchor.set(0.5,0);
 		this.startButton.input.useHandCursor = true;
