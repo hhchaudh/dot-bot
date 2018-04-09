@@ -36,25 +36,15 @@ Game.Game.prototype = {
 			}
 		}
 
-        // Player setup
-        Game.otherPlayers = {};
-        var colors = ['player-green', 'player-blue', 'player-pink'];
-        var colorsHex = ['#69bd45', '#3abfef', '#ed3293'];
-        for (var i = 0; i < Game.gameData.playerNames.length; i++) {
-            var name = Game.gameData.playerNames[i];
-            console.log('Adding player ' + name);
-            if (name != Game.playerName) {
-                Game.otherPlayers[name] = {
-                    "color": colors.shift(),
-                    "colorHex": colorsHex.shift(),
-                };
-            }
-        }
         Game.playerPink = this.add.sprite(Game.startX, Game.startY, 'player-pink');
+        Game.playerPinkTween = this.add.tween(Game.playerPink);
         Game.playerBlue = this.add.sprite(Game.startX, Game.startY, 'player-blue');
+        Game.playerBlueTween = this.add.tween(Game.playerBlue);
         Game.playerGreen = this.add.sprite(Game.startX, Game.startY, 'player-green');
+        Game.playerGreenTween = this.add.tween(Game.playerGreen);
 
 		Game.player = this.add.sprite(Game.startX, Game.startY, 'player-yellow');
+        Game.playerTween = this.add.tween(Game.player);
 		this.physics.arcade.enable(Game.player);
 		Game.player.enableBody = true;
         Game.player.body.moves = true;
@@ -81,37 +71,6 @@ Game.Game.prototype = {
 
 		// Save the current 'this' scope for later
 		Game.currentScope = this;
-
-		Game.socket.on('playerMoved', function (playerMove) {
-			// console.log('Player move received: ' + JSON.stringify(playerMove));
-			Game.movePlayer(playerMove.name, playerMove.position);
-		});
-
-		Game.socket.on('playerReset', function (name) {
-			console.log('Player reset: ' + name);
-			Game.resetPlayer(name);
-		});
-
-		Game.socket.on('gameWon', function(playerName) {
-			console.log('Player won: ' + playerName);
-		});
-
-		Game.socket.on('newGameCountDown', function (seconds) {
-			console.log(seconds);
-		});
-
-		Game.socket.on('backToWaiting', function() {
-			// after the countdown is over, if there is a player missing, then this message will be sent to the remaining players.
-			console.log('Received server call to go back to Lobby state');
-			Game.currentScope.game.state.start('Lobby');
-		});
-
-		Game.socket.on('newGame', function(data) {
-			// activates when no player has left the current game
-			console.log('Got new game message with map: ');
-			console.log(data);
-			Game.currentScope.game.state.start('Game');
-		})
 	},
 
 	sendQueue: function () {

@@ -155,6 +155,7 @@ io.on('connection', (socket) => {
                 player.emitter = queueEmitter;
                 player.room = gameID;
                 player.powerups = [];
+                // console.log(player);
             });
             rooms[gameID] = {players : readyQueue};
             io.to(gameID.toString()).emit('gameStart', gameData);
