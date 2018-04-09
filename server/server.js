@@ -72,7 +72,7 @@ io.on('connection', (socket) => {
                 let disString = `${player.name} : ${mQueue[currentIndex]}`;
                 console.log(disString);
                 makeMove(currentPosition, mQueue[currentIndex]);
-                if (!isValidMove(currentPosition, gameMap["map"], player.powerups)) {
+                if (!isValidMove(currentPosition, gameMap["map"], player, io)) {
                     io.to(player.room).emit('playerReset', player.name);
                     socket.emit('fail');
                     myEmitter.emit('stop');
