@@ -17,9 +17,13 @@ Game.Preloader.prototype = {
 		this.load.image('player-pink', 'img/player-pink.png');
 		this.load.image('path', 'img/path.png');
 		this.load.image('barrier', 'img/barrier.png');
+		this.load.image('tree', 'img/tree.png');
+		this.load.image('water', 'img/water.png');
 		this.load.image('start', 'img/start.png');
 		this.load.image('goal', 'img/goal.png');
 		this.load.image('powerup', 'img/powerup.png');
+		this.load.image('axe', 'img/axe.png');
+		this.load.image('boat', 'img/boat.png');
 
 		this.load.image('queue-left', 'img/icon-left.png');
 		this.load.image('queue-right', 'img/icon-right.png');

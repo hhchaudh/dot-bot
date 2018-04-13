@@ -11,27 +11,35 @@ Game.Game.prototype = {
 		var grid = Game.gameData.gameMap.map;
 		Game.startX = 0 + (108 * Game.gameData.gameMap.startPoint[1]);
 		Game.startY = 20 + (108 * Game.gameData.gameMap.startPoint[0]);
-		Game.powerupsX = [];
-		Game.powerupsY = [];
 
 		for (var row = 0; row < 10; row++) {
 			for (var col = 0; col < 10; col++) {
 				if (grid[row][col] == 1) {
 					this.add.sprite(col * 108, row * 108 + 20, 'barrier');
-				} else {
+				}
+                else if (grid[row][col] == 2) {
+                    this.add.sprite(col * 108, row * 108 + 20, 'powerup');
+                }
+                else if (grid[row][col] == 3) {
+                    this.add.sprite(col * 108, row * 108 + 20, 'tree');
+                }
+                else if (grid[row][col] == 4) {
+                    this.add.sprite(col * 108, row * 108 + 20, 'water');
+                }
+                else if (grid[row][col] == 5) {
+                    this.add.sprite(col * 108, row * 108 + 20, 'axe');
+                }
+                else if (grid[row][col] == 6) {
+                    this.add.sprite(col * 108, row * 108 + 20, 'boat');
+                }
+                else if (grid[row][col] == 99) {
+                    this.add.sprite(col * 108, row * 108 + 20, 'goal');
+                }
+                else if (grid[row][col] == 100) {
+                    this.add.sprite(col * 108, row * 108 + 20, 'start');
+                }
+                else {
 					this.add.sprite(col * 108, row * 108 + 20, 'path');
-
-					if (grid[row][col] == 99) {
-						this.add.sprite(col * 108, row * 108 + 20, 'goal');
-					}
-					else if (grid[row][col] == 100) {
-						this.add.sprite(col * 108, row * 108 + 20, 'start');
-					}
-					else if (grid[row][col] == 2) {
-						Game.powerup = this.add.sprite(col * 108, row * 108 + 20, 'powerup');
-						Game.powerupsX.push(col);
-						Game.powerupsY.push(row);
-					}
 				}
 			}
 		}
@@ -220,13 +228,13 @@ Game.movePlayer = function (name, position) {
             }, 400, "Linear", true, 0, 0);
 		}
 		
-		if ((Game.powerupsX.indexOf(position[1]) == Game.powerupsY.indexOf(position[0])) && (Game.powerupsX.indexOf(position[1]) != -1)) {
-			Game.notificationText.destroy();
-			Game.notificationText = Game.currentScope.add.text(Game._WIDTH*0.5, 1160, name + ' has picked up a powerup!', {font: '40px Arial Black', fill: '#ffffff'});
-			Game.notificationText.anchor.set(0.5);
-			Game.notificationText.addColor(Game.otherPlayers[name].colorHex, 0);
-			Game.notificationText.addColor('#ffffff', name.length);
-		}
+		// if ((Game.powerupsX.indexOf(position[1]) == Game.powerupsY.indexOf(position[0])) && (Game.powerupsX.indexOf(position[1]) != -1)) {
+		// 	Game.notificationText.destroy();
+		// 	Game.notificationText = Game.currentScope.add.text(Game._WIDTH*0.5, 1160, name + ' has picked up a powerup!', {font: '40px Arial Black', fill: '#ffffff'});
+		// 	Game.notificationText.anchor.set(0.5);
+		// 	Game.notificationText.addColor(Game.otherPlayers[name].colorHex, 0);
+		// 	Game.notificationText.addColor('#ffffff', name.length);
+		// }
     }
 };
 
