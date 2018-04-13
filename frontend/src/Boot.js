@@ -66,6 +66,34 @@ Game.Boot.prototype = {
 
         Game.socket.on('powerupPickup', function(data) {
             console.log(data);
+            var name = data.playerName;
+            var type = data.powerup;
+            // Decide which powerup it is
+            if (type == 2) {
+                type = "a powerup";
+            }
+            else if (type == 5) {
+                type = "an axe";
+            }
+            else if (type == 6) {
+                type = "a boat";
+            }
+            // Current player
+            if (name == Game.playerName) {
+                Game.notificationText.destroy();
+                Game.notificationText = Game.currentScope.add.text(Game._WIDTH*0.5, 1160, 'You have picked up ' + type + '!', {font: '40px Arial Black', fill: '#ffffff'});
+                Game.notificationText.anchor.set(0.5);
+                Game.notificationText.addColor('#fff200', 0);
+                Game.notificationText.addColor('#ffffff', 3);
+            }
+            // Other players
+            else {
+                Game.notificationText.destroy();
+                Game.notificationText = Game.currentScope.add.text(Game._WIDTH*0.5, 1160, name + ' has picked up ' + type + '!', {font: '40px Arial Black', fill: '#ffffff'});
+                Game.notificationText.anchor.set(0.5);
+                Game.notificationText.addColor(Game.otherPlayers[name].colorHex, 0);
+                Game.notificationText.addColor('#ffffff', name.length);
+            }
         });
 
 		this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;

@@ -14,6 +14,7 @@ Game.Game.prototype = {
 
 		for (var row = 0; row < 10; row++) {
 			for (var col = 0; col < 10; col++) {
+                this.add.sprite(col * 108, row * 108 + 20, 'path');
 				if (grid[row][col] == 1) {
 					this.add.sprite(col * 108, row * 108 + 20, 'barrier');
 				}
@@ -38,9 +39,6 @@ Game.Game.prototype = {
                 else if (grid[row][col] == 100) {
                     this.add.sprite(col * 108, row * 108 + 20, 'start');
                 }
-                else {
-					this.add.sprite(col * 108, row * 108 + 20, 'path');
-				}
 			}
 		}
 
@@ -154,14 +152,6 @@ Game.movePlayer = function (name, position) {
 			x: xPos,
 			y: yPos
 		}, 400, "Linear", true, 0, 0);
-
-		if (Game.powerupsX.indexOf(position[1]) == Game.powerupsY.indexOf(position[0])) {
-			Game.notificationText.destroy();
-			Game.notificationText = Game.currentScope.add.text(Game._WIDTH*0.5, 1160, 'You have picked up a powerup!', {font: '40px Arial Black', fill: '#ffffff'});
-			Game.notificationText.anchor.set(0.5);
-			Game.notificationText.addColor('#fff200', 0);
-			Game.notificationText.addColor('#ffffff', 3);
-		}
     }
     // Other players
     else {
@@ -186,14 +176,6 @@ Game.movePlayer = function (name, position) {
                 y: yPos
             }, 400, "Linear", true, 0, 0);
 		}
-		
-		// if ((Game.powerupsX.indexOf(position[1]) == Game.powerupsY.indexOf(position[0])) && (Game.powerupsX.indexOf(position[1]) != -1)) {
-		// 	Game.notificationText.destroy();
-		// 	Game.notificationText = Game.currentScope.add.text(Game._WIDTH*0.5, 1160, name + ' has picked up a powerup!', {font: '40px Arial Black', fill: '#ffffff'});
-		// 	Game.notificationText.anchor.set(0.5);
-		// 	Game.notificationText.addColor(Game.otherPlayers[name].colorHex, 0);
-		// 	Game.notificationText.addColor('#ffffff', name.length);
-		// }
     }
 };
 
