@@ -8,6 +8,7 @@ Game.Preloader.prototype = {
 		this.game.add.plugin(PhaserInput.Plugin);
 
 		this.load.image('screen-bg', 'img/screen-bg.png');
+		this.load.image('screen-bg-transparent', 'img/screen-bg-transparent.png');
 		this.load.image('screen-mainmenu', 'img/screen-mainmenu.png');
 		this.load.image('screen-lobby', 'img/screen-lobby.png');
 		this.load.image('move-queue-bg', 'img/move-queue-bg.png');

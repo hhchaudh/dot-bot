@@ -23,12 +23,39 @@ Game.Boot.prototype = {
             Game.resetPlayer(name);
         });
 
-        Game.socket.on('gameWon', function(playerName) {
-            console.log('Player won: ' + playerName);
+        Game.socket.on('gameWon', function (name) {
+            console.log('Player won: ' + name);
+            Game.currentScope.add.sprite(0, 0, 'screen-bg-transparent');
+
+            Game.wonHeader = Game.currentScope.add.text(Game._WIDTH*0.5, 560, 'Player won:', {font: '70px Arial Black', fill: '#ffffff'});
+            Game.wonHeader.anchor.set(0.5);
+
+            // Current player
+            if (name == Game.playerName) {
+                Game.wonText = Game.currentScope.add.text(Game._WIDTH*0.5, 700, name, {font: '140px Arial Black', fill: '#fff200'});
+                Game.wonText.anchor.set(0.5);
+            }
+            // Other players
+            else {
+                Game.wonText = Game.currentScope.add.text(Game._WIDTH*0.5, 700, name, {font: '140px Arial Black', fill: Game.otherPlayers[name].colorHex});
+                Game.wonText.anchor.set(0.5);
+            }
+
+            Game.countdownHeader = Game.currentScope.add.text(Game._WIDTH*0.5, 1060, 'Next game starts in:', {font: '70px Arial Black', fill: '#ffffff'});
+            Game.countdownHeader.anchor.set(0.5);
+
+            Game.countdownText = Game.currentScope.add.text(Game._WIDTH*0.5, 1200, '5', {font: '140px Arial Black', fill: '#fbb040'});
+            Game.countdownText.anchor.set(0.5);
         });
 
         Game.socket.on('newGameCountDown', function (seconds) {
             console.log(seconds);
+            Game.countdownText.text = seconds;
+            Game.countdownText.alpha = 1;
+            Game.textTween = Game.currentScope.add.tween(Game.countdownText);
+            Game.textTween.to({
+                alpha: 0.5
+            }, 250, "Linear", true, 0, 0);
         });
 
         Game.socket.on('backToWaiting', function() {
