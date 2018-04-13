@@ -68,7 +68,7 @@ let makeMove = (currentPosition, nextMove) => {
     }
 };
 
-let isValidMove = (currentPosition, gameMap, playerPowerups) => {
+let isValidMove = (currentPosition, gameMap, player, io) => {
     if(currentPosition[0] < 0 || currentPosition[1] < 0 || currentPosition[0] >= gameMap.length || currentPosition[1] >= gameMap[0].length ) {
         return false;
     }
@@ -78,7 +78,8 @@ let isValidMove = (currentPosition, gameMap, playerPowerups) => {
 
     if(mapLegend[mapPositionValue].isNavigable) {
         if(mapLegend[mapPositionValue].isPowerup) {
-            playerPowerups.push(mapPositionValue);
+            player.powerups.push(mapPositionValue);
+            io.to(player.room).emit('powerupPickup', {playerName: player.name, powerup: mapPositionValue});
         }
         return true;
     } else {
@@ -88,7 +89,7 @@ let isValidMove = (currentPosition, gameMap, playerPowerups) => {
 
         let numPowerupsSatisfied = 0;
         let powerupReqMet = false;
-        playerPowerups.forEach((playerPowerup) => {
+        player.powerups.forEach((playerPowerup) => {
             if(positionAttributes.requiredPowerups.findIndex((reqPowerup) => reqPowerup === playerPowerup) !== undefined) {
                 numPowerupsSatisfied++;
                 if(numPowerupsSatisfied === positionAttributes.numPowerupsRequired) {
