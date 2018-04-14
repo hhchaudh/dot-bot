@@ -11,6 +11,7 @@ Game.Preloader.prototype = {
 		this.load.image('screen-bg-transparent', 'img/screen-bg-transparent.png');
 		this.load.image('screen-mainmenu', 'img/screen-mainmenu.png');
 		this.load.image('screen-lobby', 'img/screen-lobby.png');
+		this.load.image('waiting', 'img/waiting.png');
 		this.load.image('move-queue-bg', 'img/move-queue-bg.png');
 		this.load.image('player-yellow', 'img/player-yellow.png');
 		this.load.image('player-green', 'img/player-green.png');
@@ -38,6 +39,7 @@ Game.Preloader.prototype = {
 		this.load.spritesheet('button-right', 'img/button-right.png', 190, 140);
 
 		this.load.spritesheet('button-play', 'img/button-play.png', 330, 132);
+		this.load.spritesheet('button-ready', 'img/button-ready.png', 330, 132);
 		this.load.spritesheet('button-reset', 'img/button-reset.png', 350, 110);
 		this.load.spritesheet('button-undo', 'img/button-undo.png', 350, 110);
 		this.load.spritesheet('button-go', 'img/button-go.png', 350, 110);

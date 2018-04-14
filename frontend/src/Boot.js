@@ -88,7 +88,7 @@ Game.Boot.prototype = {
                     };
                 }
             }
-            Game.currentScope.startGame();
+            Game.currentScope.game.state.start('Game');
         });
 
         Game.socket.on('powerupPickup', function(data) {
