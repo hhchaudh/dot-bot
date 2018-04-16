@@ -30,7 +30,10 @@ app.use(express.static(publicPath));
 let startNewGame = (roomName) => {
     let newMap = getNewMap();
     let roomPlayers = rooms[roomName].players;
-    roomPlayers.forEach((player) => player.gameMap = newMap);
+    roomPlayers.forEach((player) => {
+        player.gameMap = newMap;
+        player.powerups = [];
+    });
     io.to(roomName).emit("newGame", newMap);
 };
 
