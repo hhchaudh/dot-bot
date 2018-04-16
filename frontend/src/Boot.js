@@ -68,6 +68,7 @@ Game.Boot.prototype = {
             // activates when no player has left the current game
             console.log('Got new game message with map: ');
             console.log(data);
+            Game.gameData.gameMap = data;
             Game.currentScope.game.state.start('Game');
         });
 
