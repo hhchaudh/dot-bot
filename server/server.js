@@ -30,7 +30,10 @@ app.use(express.static(publicPath));
 let startNewGame = (roomName) => {
     let newMap = getNewMap();
     let roomPlayers = rooms[roomName].players;
-    roomPlayers.forEach((player) => player.gameMap = newMap);
+    roomPlayers.forEach((player) => {
+        player.gameMap = newMap;
+        player.powerups = [];
+    });
     io.to(roomName).emit("newGame", newMap);
 };
 
@@ -52,7 +55,6 @@ io.on('connection', (socket) => {
         users.removeUser(socket.id);
         users.addUser(socket.id, name, gameID, queueEmitter);
         playerQueue.push(users.getUser(socket.id));
-        socket.join(gameID.toString());
 
         callback();
     });
@@ -73,7 +75,7 @@ io.on('connection', (socket) => {
                 let disString = `${player.name} : ${mQueue[currentIndex]}`;
                 console.log(disString);
                 makeMove(currentPosition, mQueue[currentIndex]);
-                if (!isValidMove(currentPosition, gameMap["map"], player.powerups)) {
+                if (!isValidMove(currentPosition, gameMap["map"], player, io)) {
                     io.to(player.room).emit('playerReset', player.name);
                     socket.emit('fail');
                     myEmitter.emit('stop');
@@ -87,8 +89,7 @@ io.on('connection', (socket) => {
                         let countDown = setInterval(() => {
                             io.to(player.room).emit('newGameCountDown', seconds);
                             seconds--;
-                            if(seconds <= 0) {
-                                clearInterval(countDown);
+                            if(seconds <= 0) {                                
                                 if(io.sockets.adapter.rooms[player.room].length === MAX_GAME_PLAYER_COUNT) {
                                     startNewGame(player.room);
                                 } else {
@@ -98,6 +99,7 @@ io.on('connection', (socket) => {
                                     io.to(player.room).emit('backToWaiting');
                                     delete rooms[player.room];
                                 }
+                                clearInterval(countDown);
                             }
                         }, 1000);
                         return;
@@ -128,6 +130,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('readyAndWaiting', (callback) => {
+        socket.join(gameID.toString());
         let queueRemovalIndex = playerQueue.findIndex((player) => player.id === socket.id);
         if (queueRemovalIndex > -1) {
             let player = playerQueue.splice(queueRemovalIndex, 1);
@@ -153,6 +156,9 @@ io.on('connection', (socket) => {
             readyQueue.forEach((player) => {
                 player.gameMap = gameMap;
                 player.emitter = queueEmitter;
+                player.room = gameID;
+                player.powerups = [];
+                // console.log(player);
             });
             rooms[gameID] = {players : readyQueue};
             io.to(gameID.toString()).emit('gameStart', gameData);

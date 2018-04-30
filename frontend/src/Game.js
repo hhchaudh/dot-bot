@@ -14,43 +14,43 @@ Game.Game.prototype = {
 
 		for (var row = 0; row < 10; row++) {
 			for (var col = 0; col < 10; col++) {
+                this.add.sprite(col * 108, row * 108 + 20, 'path');
 				if (grid[row][col] == 1) {
 					this.add.sprite(col * 108, row * 108 + 20, 'barrier');
-				} else {
-					this.add.sprite(col * 108, row * 108 + 20, 'path');
-
-					if (grid[row][col] == 99) {
-						this.add.sprite(col * 108, row * 108 + 20, 'goal');
-					}
-					else if (grid[row][col] == 100) {
-						this.add.sprite(col * 108, row * 108 + 20, 'start');
-					}
-					else if (grid[row][col] == 2) {
-						Game.powerup = this.add.sprite(col * 108, row * 108 + 20, 'powerup');
-					}
 				}
+                else if (grid[row][col] == 2) {
+                    this.add.sprite(col * 108, row * 108 + 20, 'powerup');
+                }
+                else if (grid[row][col] == 3) {
+                    this.add.sprite(col * 108, row * 108 + 20, 'tree');
+                }
+                else if (grid[row][col] == 4) {
+                    this.add.sprite(col * 108, row * 108 + 20, 'water');
+                }
+                else if (grid[row][col] == 5) {
+                    this.add.sprite(col * 108, row * 108 + 20, 'axe');
+                }
+                else if (grid[row][col] == 6) {
+                    this.add.sprite(col * 108, row * 108 + 20, 'boat');
+                }
+                else if (grid[row][col] == 99) {
+                    this.add.sprite(col * 108, row * 108 + 20, 'goal');
+                }
+                else if (grid[row][col] == 100) {
+                    this.add.sprite(col * 108, row * 108 + 20, 'start');
+                }
 			}
 		}
 
-        // Player setup
-        Game.otherPlayers = {};
-        var colors = ['player-green', 'player-blue', 'player-pink'];
-        var colorsHex = ['#69bd45', '#3abfef', '#ed3293'];
-        for (var i = 0; i < Game.gameData.playerNames.length; i++) {
-            var name = Game.gameData.playerNames[i];
-            console.log('Adding player ' + name);
-            if (name != Game.playerName) {
-                Game.otherPlayers[name] = {
-                    "color": colors.shift(),
-                    "colorHex": colorsHex.shift(),
-                };
-            }
-        }
         Game.playerPink = this.add.sprite(Game.startX, Game.startY, 'player-pink');
+        Game.playerPinkTween = this.add.tween(Game.playerPink);
         Game.playerBlue = this.add.sprite(Game.startX, Game.startY, 'player-blue');
+        Game.playerBlueTween = this.add.tween(Game.playerBlue);
         Game.playerGreen = this.add.sprite(Game.startX, Game.startY, 'player-green');
+        Game.playerGreenTween = this.add.tween(Game.playerGreen);
 
 		Game.player = this.add.sprite(Game.startX, Game.startY, 'player-yellow');
+        Game.playerTween = this.add.tween(Game.player);
 		this.physics.arcade.enable(Game.player);
 		Game.player.enableBody = true;
         Game.player.body.moves = true;
@@ -62,14 +62,14 @@ Game.Game.prototype = {
 		Game.nextQueueY = 1250;
 
 		// Controls setup
-		Game.resetButton = this.add.button(15, 1596, 'button-reset', this.resetQueue, this, 2, 0, 1);
-		Game.undoButton = this.add.button(365, 1596, 'button-undo', this.undoQueue, this, 2, 0, 1);
-		Game.goButton = this.add.button(715, 1596, 'button-go', this.sendQueue, this, 2, 0, 1);
+		Game.resetButton = this.add.button(15, 1596, 'button-reset', this.resetQueue, this, 2, 0, 1, 0);
+		Game.undoButton = this.add.button(365, 1596, 'button-undo', this.undoQueue, this, 2, 0, 1, 0);
+		Game.goButton = this.add.button(715, 1596, 'button-go', this.sendQueue, this, 2, 0, 1, 0);
 
-		Game.leftButton = this.add.button(160, 1740, 'button-left', function() { this.addMove('left') }, this, 2, 0, 1);
-		Game.upButton = this.add.button(350, 1740, 'button-up', function() { this.addMove('up') }, this, 2, 0, 1);
-		Game.downButton = this.add.button(540, 1740, 'button-down', function() { this.addMove('down') }, this, 2, 0, 1);
-		Game.rightButton = this.add.button(730, 1740, 'button-right', function() { this.addMove('right') }, this, 2, 0, 1);
+		Game.leftButton = this.add.button(160, 1740, 'button-left', function() { this.addMove('left') }, this, 2, 0, 1, 0);
+		Game.upButton = this.add.button(350, 1740, 'button-up', function() { this.addMove('up') }, this, 2, 0, 1, 0);
+		Game.downButton = this.add.button(540, 1740, 'button-down', function() { this.addMove('down') }, this, 2, 0, 1, 0);
+		Game.rightButton = this.add.button(730, 1740, 'button-right', function() { this.addMove('right') }, this, 2, 0, 1, 0);
 
 		// Text notification setup
 		Game.notificationText = this.add.text(Game._WIDTH*0.5, 1160, 'Game start!', {font: '40px Arial Black', fill: '#ffffff'});
@@ -77,16 +77,6 @@ Game.Game.prototype = {
 
 		// Save the current 'this' scope for later
 		Game.currentScope = this;
-
-		Game.socket.on('playerMoved', function(playerMove) {
-			// console.log('Player move received: ' + JSON.stringify(playerMove));
-			Game.movePlayer(playerMove.name, playerMove.position);
-		});
-
-		Game.socket.on('playerReset', function(name) {
-			console.log('Player reset: ' + name);
-			Game.resetPlayer(name);
-		});
 	},
 
 	sendQueue: function () {
@@ -185,7 +175,7 @@ Game.movePlayer = function (name, position) {
                 x: xPos,
                 y: yPos
             }, 400, "Linear", true, 0, 0);
-        }
+		}
     }
 };
 
@@ -193,10 +183,11 @@ Game.resetPlayer = function (name) {
 	Game.notificationText.destroy();
 	if(name == Game.playerName) {
 		Game.playerTween.stop(true);
-        setTimeout( function() {
-            Game.player.x = Game.startX;
-            Game.player.y = Game.startY;
-        }, 100);
+        Game.playerTween = Game.currentScope.add.tween(Game.player);
+		Game.playerTween.to({
+			x: Game.startX,
+			y: Game.startY
+		}, 100, "Linear", true, 0, 0);
 
 		Game.notificationText = Game.currentScope.add.text(Game._WIDTH*0.5, 1160, 'You have been reset!', {font: '40px Arial Black', fill: '#ffffff'});
 		Game.notificationText.anchor.set(0.5);
@@ -206,24 +197,27 @@ Game.resetPlayer = function (name) {
 	else {
         if (Game.otherPlayers[name].color == 'player-green') {
             Game.playerGreenTween.stop(true);
-            setTimeout( function() {
-                Game.playerGreen.x = Game.startX;
-                Game.playerGreen.y = Game.startY;
-            }, 100);
+			Game.playerGreenTween = Game.currentScope.add.tween(Game.playerGreen);
+            Game.playerGreenTween.to({
+                x: Game.startX,
+                y: Game.startY
+            }, 100, "Linear", true, 0, 0);
         }
         else if (Game.otherPlayers[name].color == 'player-blue') {
             Game.playerBlueTween.stop(true);
-            setTimeout( function() {
-                Game.playerBlue.x = Game.startX;
-                Game.playerBlue.y = Game.startY;
-            }, 100);
+            Game.playerBlueTween = Game.currentScope.add.tween(Game.playerBlue);
+            Game.playerBlueTween.to({
+                x: Game.startX,
+                y: Game.startY
+            }, 100, "Linear", true, 0, 0);
         }
         else if (Game.otherPlayers[name].color == 'player-pink') {
             Game.playerPinkTween.stop(true);
-            setTimeout( function() {
-                Game.playerPink.x = Game.startX;
-                Game.playerPink.y = Game.startY;
-            }, 100);
+            Game.playerPinkTween = Game.currentScope.add.tween(Game.playerPink);
+            Game.playerPinkTween.to({
+                x: Game.startX,
+                y: Game.startY
+            }, 100, "Linear", true, 0, 0);
         }
 
 		Game.notificationText = Game.currentScope.add.text(Game._WIDTH*0.5, 1160, name + ' has been reset!', {font: '40px Arial Black', fill: '#ffffff'});
@@ -245,7 +239,6 @@ Game.resetPlayer = function (name) {
 Game.addToQueue = function (instruction) {
 	// If displayed moves is too long, display a '...' and do not display more
 	if (Game.moveQueue.length == 30) {
-		/***** UPDATE THIS *****/
 		Game.queue.create(Game.nextQueueX, Game.nextQueueY, 'queue-more');
 		Game.nextQueueX += 103;
 		return;
